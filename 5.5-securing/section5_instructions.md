@@ -28,7 +28,7 @@ This 2-hour discussion session uses the RAND *Securing AI Model Weights* report 
 - Side-channel attacks
 - Hardware supply-chain attacks
 - Model-weight exfiltration
-- AI data-center security standards
+- Security standards
 - Security R&D
 - Threat and incident information sharing
 - Hardware supply-chain security
@@ -70,8 +70,6 @@ The unit being classified is the operation rather than permanently the attacker.
 
 **OC5** corresponds to the relatively small number of **top-priority operations conducted by the world's most capable institutions**, where substantially more personnel, money, time, intelligence support, specialized expertise, and infrastructure may be available.
 
-A useful shorthand is:
-
 | | OC4 | OC5 |
 |---|---|---|
 | **Type of operation** | Standard high-end operation | Exceptional top-priority operation |
@@ -80,9 +78,10 @@ A useful shorthand is:
 | **Planning horizon** | Major sustained operation | Potentially multi-year |
 | **Specialized capabilities** | Advanced | The most difficult capabilities may be brought to bear |
 
-The distinction is therefore closer to:
+A useful shorthand is:
 
-> **normal high-end state operation vs. exceptional, heavily resourced top-priority state operation**
+> **OC4 = normal high-end state operation**  
+> **OC5 = exceptional, heavily resourced top-priority state operation**
 
 ---
 
@@ -104,13 +103,13 @@ RAND's framework captures the resources available to the **specific operation**.
 
 RAND treats attack feasibility as graded rather than assigning every attack exclusively to one OC level.
 
-At higher operational capability, attacks requiring combinations of the following become more realistic:
+At higher Operational Capability, attacks requiring combinations of the following become more realistic:
 
 - specialized zero-day development
 - long-term persistence
 - insider recruitment
-- hardware or software supply-chain compromise
-- attacks on highly isolated systems
+- software or hardware supply-chain compromise
+- attacks against highly isolated systems
 - specialized hardware capabilities
 - significant intelligence support
 - long preparation times
@@ -143,11 +142,11 @@ At higher operational capability, attacks requiring combinations of the followin
 
 The basic relationship is:
 
-**OC4 threat → design toward SL4**
+> **OC4 threat → design toward SL4**
 
-**OC5 threat → design toward SL5**
+> **OC5 threat → design toward SL5**
 
-The Security Level says what strength of offensive operation the defender is trying to withstand.
+The Security Level describes what strength of offensive operation the defender is trying to withstand.
 
 ---
 
@@ -189,9 +188,9 @@ Copies of the same weights are needed in several environments:
 
 No.
 
-RAND discusses different environments because the **security problem and available controls differ between them**. The environment does not by itself determine how capable an adversary the organization wants to withstand.
+RAND discusses several environments because the **security problem and available controls differ between them**. The type of environment does not by itself determine how capable an adversary the organization wants to withstand.
 
-For sufficiently valuable frontier-model weights, the desired level of protection may flatten across several environments.
+For sufficiently valuable frontier-model weights, the desired level of protection may therefore be similar across several environments.
 
 ---
 
@@ -244,7 +243,7 @@ So:
 
 ---
 
-### Part 2: IAPS Data Center Security - Major Threats (40 minutes)
+### Part 2: IAPS Data Center Security - Major Threats (35 minutes)
 
 #### Exercise 2.1: Attack Vector Analysis
 
@@ -253,7 +252,7 @@ So:
 
 **Task**: Read the IAPS discussion of the following three AI data-center attack areas.
 
-Every group should complete the table for **all three attacks**.
+Complete the table for **all three attacks**.
 
 | Attack Area | How does it work? | What does the attacker need? | Why does IAPS think it matters? | What defensive direction does IAPS suggest? |
 |---|---|---|---|---|
@@ -292,7 +291,7 @@ Depending on the attack:
 
 - AI accelerators have received less public side-channel-security scrutiny than mature general-purpose processors.
 - Proprietary accelerator designs can make independent security research difficult.
-- Sophisticated state adversaries may consider physical attacks that normal enterprise-security programs rarely prioritize.
+- Sophisticated state adversaries may consider physical attacks that ordinary data-center security programs rarely prioritize.
 
 **Defensive direction:**
 
@@ -335,7 +334,7 @@ Potential requirements include:
 - AI data centers rely on complex global supply chains.
 - Compromised hardware may operate below the visibility of normal host security controls.
 - Responsibility is distributed across chip designers, manufacturers, equipment vendors, integrators, and operators.
-- A sufficiently capable adversary may be able to exploit stages of the supply chain that the final data-center operator cannot directly observe.
+- A sufficiently capable adversary may exploit stages of the supply chain that the final data-center operator cannot directly observe.
 
 **Defensive direction:**
 
@@ -383,12 +382,14 @@ However, their very large size also gives defenders an unusual advantage. Unlike
 
 ---
 
-#### Exercise 2.2: Comparing the Threats
+### Part 3: IAPS - Comparing Threats and Defensive Gaps (25 minutes)
+
+#### Exercise 3.1: Comparing the Threats
 
 > **Difficulty**: 🔴🔴🔴⚪⚪  
 > **Importance**: 🔵🔵🔵🔵🔵
 
-**Threat Comparison**: Using your completed table, discuss:
+Using your completed table from Exercise 2.1, discuss:
 
 1. Which attack is likely to be cheapest for an adversary under favorable circumstances?
 2. Which could be hardest for a data-center operator to detect?
@@ -433,7 +434,7 @@ The exact answer depends on the particular attack. IAPS does not provide a unive
 
 ---
 
-**4. Initial access vs. post-compromise**
+**4. Initial compromise vs. post-compromise**
 
 **Hardware supply-chain compromise** can itself establish attacker access or undermine system integrity.
 
@@ -460,224 +461,183 @@ That creates opportunities to:
 
 ---
 
-### Part 3: IAPS - Main Solution Directions (20 minutes)
+#### Exercise 3.2: Where Are the Defensive Gaps?
 
-#### Exercise 3.1: From Threats to Defensive Priorities
-
-> **Difficulty**: 🔴🔴🔴⚪⚪  
+> **Difficulty**: 🔴🔴🔴🔴⚪  
 > **Importance**: 🔵🔵🔵🔵🔵
 
-**Task**: Read the IAPS recommendations and complete the following table.
+**Task**: For each attack area, distinguish between defenses that an AI data-center operator can pursue directly and defenses that depend substantially on new research, hardware vendors, suppliers, or government action.
 
-Every group should examine **all four solution directions**.
-
-| IAPS Solution Direction | What problem is it addressing? | Which threat(s) from Part 2 does it help with? | What does IAPS propose? | Who needs to act? |
-|---|---|---|---|---|
-| **AI data-center security standards** | ? | ? | ? | ? |
-| **Security R&D** | ? | ? | ? | ? |
-| **Threat and incident information sharing** | ? | ? | ? | ? |
-| **Hardware supply-chain security** | ? | ? | ? | ? |
-
-<details>
-<summary><b>IAPS Solution Directions</b></summary>
-
-### 1. AI Data-Center Security Standards
-
-**Problem:**
-
-Existing security standards do not fully address the distinctive risks of frontier AI data centers or the requirements imposed by very capable adversaries.
-
-**Threats addressed:**
-
-Potentially all three attack areas, by establishing stronger baseline expectations across the data-center security program.
-
-**Proposed direction:**
-
-Develop AI data-center-specific security standards or frameworks with progressively stronger security practices.
-
-**Who needs to act?**
-
-- data-center operators
-- AI labs
-- government
-- standards organizations
-- relevant technology vendors
-
----
-
-### 2. Security R&D
-
-**Problem:**
-
-Important defenses are immature, unavailable, or insufficiently studied.
-
-**Threats addressed:**
-
-Especially:
-
-- side-channel attacks
-- hardware attacks
-- model-weight exfiltration
-
-**Proposed direction:**
-
-Fund and incentivize focused security R&D, including areas such as:
-
-- accelerator side-channel defenses
-- hardware security
-- supply-chain security
-- defenses against model-weight exfiltration
-- other AI data-center-specific security technologies
-
-IAPS discusses mechanisms including **DARPA-style programs** for targeted research.
-
-**Who needs to act?**
-
-- government research funders
-- hardware vendors
-- academic and independent researchers
-- AI labs
-
----
-
-### 3. Threat and Incident Information Sharing
-
-**Problem:**
-
-Individual organizations have incomplete information about attacks against AI infrastructure, while useful threat intelligence and incident lessons may remain siloed.
-
-**Threats addressed:**
-
-Potentially all three attack areas.
-
-Information about:
-
-- observed side-channel attacks
-- compromised components or suppliers
-- exfiltration attempts
-- attacker infrastructure
-- indicators of compromise
-
-can improve defenses across multiple organizations.
-
-**Proposed direction:**
-
-Improve information sharing between government and industry and among affected organizations.
-
-Possible mechanisms include:
-
-- sharing threat intelligence
-- reporting serious incidents
-- distributing indicators and lessons learned
-- industry coordination mechanisms
-
-**Who needs to act?**
-
-- AI labs
-- data-center operators
-- hardware vendors
-- government agencies
-
----
-
-### 4. Hardware Supply-Chain Security
-
-**Problem:**
-
-Critical AI data-center components may be produced through long, opaque, and geographically distributed supply chains that sophisticated adversaries can target.
-
-**Threats addressed:**
-
-Most directly:
-
-- hardware supply-chain compromise
-
-It may also reduce opportunities for hardware-assisted side channels or persistent exfiltration mechanisms.
-
-**Proposed direction:**
-
-- identify critical dependencies
-- improve supplier assurance
-- improve component verification
-- develop more trusted supply options
-- reduce dependence on especially high-risk sources where appropriate
-
-**Who needs to act?**
-
-- hardware manufacturers
-- equipment vendors
-- AI labs
-- data-center operators
-- governments
-
-</details>
-
----
-
-#### Exercise 3.2: Prioritizing IAPS Recommendations
-
-> **Difficulty**: 🔴🔴🔴⚪⚪  
-> **Importance**: 🔵🔵🔵🔵⚪
-
-Your organization is building a data center that will store and serve the weights of a strategically important frontier model.
-
-Assume the organization believes:
-
-- **OC4 operations are definitely in scope**
-- **OC5 operations may be in scope**
-
-**Discussion Questions:**
-
-1. Which IAPS solution direction could improve security fastest using currently available technology?
-2. Which depends most heavily on new research or new hardware?
-3. Which requires coordination beyond the individual AI lab?
-4. Which of the three attack areas from Exercise 2.1 seems hardest to address using today's technology?
-5. For each answer, identify which attacker capability or attack path the proposed improvement is intended to address.
+| Attack Area | What can an operator do directly? | What still depends on R&D or vendors? | What requires action outside the individual operator? |
+|---|---|---|---|
+| **Side-channel attacks** | ? | ? | ? |
+| **Hardware supply-chain attacks** | ? | ? | ? |
+| **Model-weight exfiltration** | ? | ? | ? |
 
 <details>
 <summary><b>Discussion Guide</b></summary>
 
-There is no single required ranking.
+### Side-Channel Attacks
 
-Reasonable observations include:
+**Operator actions:**
 
-**Security standards**
-- Can begin using existing technologies and practices
-- Require agreement about what controls are appropriate for high-assurance AI data centers
-- Can improve consistency across many areas of security
+Depending on the threat and hardware, operators may be able to use:
 
-**Security R&D**
-- Is essential where effective defenses do not yet exist
-- Side-channel hardening and some hardware-security improvements may require changes by accelerator vendors
-- Some defenses cannot be deployed independently by an AI lab today
+- stronger physical-access controls
+- shielding or emissions-management techniques
+- greater physical separation
+- confidential-computing features already supported by hardware
 
-**Threat and incident information sharing**
-- Can improve detection and response using existing organizational mechanisms
-- Depends on cooperation between organizations
-- Some useful intelligence may require government participation
+**R&D or vendor dependencies:**
 
-**Hardware supply-chain security**
-- Necessarily involves vendors, manufacturers, integrators, governments, and operators
-- Cannot be solved by the final data-center operator alone
-- May require long-term changes to sourcing and verification
+More comprehensive defenses may require:
 
-**Weight-exfiltration defenses**
-- Benefit from the unusually large size of weights
-- Still require defending normal networking, management infrastructure, and possible covert channels
+- accelerator-specific side-channel mitigations
+- changes to chip or board design
+- better confidential-computing support
+- improved testing and measurement techniques
 
-Answers should connect the proposed solution to the actual attacker technique rather than ranking recommendations only in the abstract.
+**Outside the operator:**
+
+- accelerator vendors
+- hardware researchers
+- government or other research funders
+
+---
+
+### Hardware Supply-Chain Attacks
+
+**Operator actions:**
+
+Operators can:
+
+- identify security-critical suppliers and components
+- improve inventory and provenance tracking
+- impose procurement and supplier-security requirements
+- audit components and suppliers where feasible
+- reduce unnecessary supplier diversity for the most security-critical components
+
+**R&D or vendor dependencies:**
+
+Stronger assurance may require:
+
+- better hardware-verification technologies
+- stronger roots of trust
+- more inspectable hardware and firmware
+- security features designed into components rather than added by the operator
+
+**Outside the operator:**
+
+Supply-chain security necessarily involves:
+
+- component manufacturers
+- equipment vendors
+- integrators
+- logistics providers
+- governments
+
+The final data-center operator cannot independently secure every upstream stage of the supply chain.
+
+---
+
+### Model-Weight Exfiltration
+
+**Operator actions:**
+
+Operators can directly strengthen:
+
+- production-network egress controls
+- management-network isolation and monitoring
+- access controls around weight storage
+- bandwidth restrictions
+- logging and monitoring of large transfers
+- restrictions on unnecessary outbound connectivity
+
+**R&D or vendor dependencies:**
+
+Harder problems include:
+
+- identifying and limiting covert channels
+- hardware-enforced egress constraints
+- stronger controls in accelerators and management hardware
+- mechanisms that remain reliable after partial system compromise
+
+**Outside the operator:**
+
+Some defenses depend on:
+
+- accelerator vendors
+- network-hardware vendors
+- management-controller vendors
+- shared threat intelligence about new exfiltration techniques
 
 </details>
 
 ---
 
-## Synthesis Exercise (10 minutes)
+### Part 4: IAPS Recommendations and Final Review (10 minutes)
 
-### Final Group Review
+#### Exercise 4.1: IAPS Solution Directions
 
-Without referring back to the report, complete the following table.
+> **Difficulty**: 🔴🔴⚪⚪⚪  
+> **Importance**: 🔵🔵🔵🔵⚪
 
-When the group is finished, open the answer key and correct anything that was missing or substantially different.
+IAPS also proposes several broader directions for improving AI data-center security.
+
+Complete the following table in one or two sentences per row.
+
+| IAPS Direction | What is it asking for? |
+|---|---|
+| **AI data-center security standards** | ? |
+| **Targeted security R&D** | ? |
+| **Threat and incident information sharing** | ? |
+| **Hardware supply-chain security** | ? |
+
+<details>
+<summary><b>Answer Key</b></summary>
+
+**AI Data-Center Security Standards**
+
+Develop security frameworks specifically for high-value AI data centers, with progressively stronger requirements as the threat level increases.
+
+**Targeted Security R&D**
+
+Fund work on defenses that are currently immature or missing, including accelerator side-channel security, hardware security, supply-chain security, and model-weight exfiltration defenses.
+
+IAPS discusses mechanisms including **DARPA-style programs** for some targeted research areas.
+
+**Threat and Incident Information Sharing**
+
+Improve sharing of:
+
+- attacks and incidents
+- indicators of compromise
+- lessons learned
+- relevant government threat intelligence
+
+between AI labs, data-center operators, vendors, and government.
+
+**Hardware Supply-Chain Security**
+
+Improve:
+
+- supply-chain visibility
+- supplier assurance
+- component verification
+- trusted sourcing
+- resilience against especially risky dependencies
+
+for security-critical AI data-center hardware.
+
+</details>
+
+---
+
+#### Exercise 4.2: Final Group Review
+
+Without referring back to the reports, complete the following table.
+
+When your group is finished, open the answer key and correct anything that was missing or substantially different.
 
 | Concept | Explain It in One or Two Sentences |
 |---|---|
@@ -743,7 +703,8 @@ Develop stronger AI data-center security standards, fund targeted security R&D, 
 - [ ] Hardware supply-chain compromise can undermine assumptions made by conventional software security
 - [ ] Model-weight exfiltration must account for production, management, and covert egress paths
 - [ ] The enormous size of frontier-model weights gives defenders useful opportunities to constrain exfiltration
-- [ ] IAPS emphasizes AI-specific security standards, targeted security R&D, threat and incident information sharing, and stronger hardware supply-chain security as major solution directions
+- [ ] Some important defenses can be implemented by data-center operators, while others depend on hardware vendors, supply-chain actors, government, or additional R&D
+- [ ] IAPS emphasizes AI-specific security standards, targeted security R&D, threat and incident information sharing, and stronger hardware supply-chain security
 
 ---
 
