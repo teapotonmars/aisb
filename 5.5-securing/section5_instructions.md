@@ -1,6 +1,6 @@
 # W1D6 - Securing Model Weights and AI Data Centers
 
-This 2-hour discussion session uses the RAND *Securing AI Model Weights* report and the IAPS *Accelerating AI Data Center Security Research and Implementation* report to examine high-end adversaries, security requirements for highly valuable AI assets, major AI data-center threats, and proposed defensive directions.
+This discussion session uses the RAND *Securing AI Model Weights* report and the IAPS *Accelerating AI Data Center Security Research and Implementation* report to examine high-end adversaries, security requirements for highly valuable AI assets, major AI data-center threats, and proposed defensive directions.
 
 ## Required Reading Materials
 
