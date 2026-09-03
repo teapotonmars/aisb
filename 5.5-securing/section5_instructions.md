@@ -1,6 +1,6 @@
 # W1D6 - Securing Model Weights and AI Data Centers
 
-This 2-hour discussion session guides you through three foundational reports on AI infrastructure security. You'll work through specific sections of each document to understand threat frameworks, security implementations, and novel defensive approaches.
+This 2-hour discussion session uses the RAND *Securing AI Model Weights* report and the IAPS *Accelerating AI Data Center Security Research and Implementation* report to examine high-end adversaries, security requirements for highly valuable AI assets, major AI data-center threats, and proposed defensive directions.
 
 ## Required Reading Materials
 
@@ -8,392 +8,747 @@ This 2-hour discussion session guides you through three foundational reports on 
 
 1. **RAND Corporation Report**: "Securing AI Model Weights" (RRA2849-1)
    - **Link**: https://www.rand.org/content/dam/rand/pubs/research_reports/RRA2800/RRA2849-1/RAND_RRA2849-1.pdf
-   - **Alternative**: Search for "RAND RRA2849-1 AI model weights security"
+   - **Focus**: Operational Capability levels (OC1-OC5), Security Levels (SL1-SL5), and attack-vector feasibility
 
 2. **IAPS Research**: "Accelerating AI Data Center Security Research and Implementation"
    - **Link**: https://www.iaps.ai/research/accelerating-ai-data-center-security
-   - **Note**: Full research findings and policy recommendations available on site
-
-3. **SL5 Task Force**: "Novel Recommendations" (November 2025) 
-   - **Local File**: `./SL5_NOVEL-RECOMMENDATIONS.pdf` (in this directory)
-   - **Note**: Preliminary draft with five security domain memos
+   - **Focus**: Important AI data-center attack vectors and recommended security directions
 
 ### Quick Reference Guide
 
 **Key Sections for Exercises:**
 
 **RAND Report:**
-- Operational Capability Levels (OC1-OC5): Section 2
-- Security Level Framework (SL1-SL5): Section 3 
-- Protected Environments: Table 3-1
-- Attack Vector Examples: Appendix B
+- Operational Capability levels, especially **OC4 and OC5**
+- Security Levels, especially **SL4 and SL5**
+- Attack-vector feasibility at different Operational Capability levels
+- Security recommendations for protecting highly valuable model weights
 
 **IAPS Research:**
-- Three Critical Threat Areas: Main article sections 1-3
-- Four Core Policy Recommendations: Conclusion section
-- Side-Channel Attacks: Technical details in section 1
-- Supply Chain Vulnerabilities: Section 2
-
-**SL5 Document:**
-- Supply Chain Security: Pages 8-17
-- Network Security: Pages 18-31  
-- Machine Security: Pages 32-40
-- Physical Security: Pages 41-50
-- Personnel Security: Pages 51-60
+- Side-channel attacks
+- Hardware supply-chain attacks
+- Model-weight exfiltration
+- AI data-center security standards
+- Security R&D
+- Threat and incident information sharing
+- Hardware supply-chain security
 
 ---
 
 ## Discussion Structure
 
-### Part 1: RAND Framework - Understanding the Threat Landscape (40 minutes)
+### Part 1: RAND Framework - OC4/OC5 and SL4/SL5 (50 minutes)
 
-#### Exercise 1.1: Operational Capability Classification
+#### Exercise 1.1: Understanding OC4 and OC5
 
 > **Difficulty**: 🔴🔴⚪⚪⚪  
 > **Importance**: 🔵🔵🔵🔵🔵
 
-**Task**: Open the RAND report and locate the Operational Capability (OC) classifications section.
+**Task**: Open the RAND report and locate the Operational Capability (OC) framework. Focus on **OC4 and OC5**.
 
 **Questions for Group Discussion:**
-1. According to RAND, what distinguishes OC4 from OC5 threat actors?
-2. Which OC level can realistically compromise GPU firmware supply chains?
-3. How does RAND estimate the cost difference between OC2 and OC5 operations?
 
-**Group Exercise**: Read the attack vector examples in the RAND report and classify each scenario:
-
-- **Scenario A**: Social engineering attack against ML researchers to steal cloud credentials
-- **Scenario B**: Custom hardware implant placed during chip manufacturing  
-- **Scenario C**: Insider threat using legitimate access to copy model checkpoints
-- **Scenario D**: Advanced persistent threat with multiple zero-day exploits
+1. What does RAND mean by an Operational Capability level?
+2. What distinguishes an **OC4 operation** from an **OC5 operation**?
+3. Why is it more accurate to classify an operation as OC4 or OC5 than to permanently classify an organization as an "OC4 attacker" or "OC5 attacker"?
+4. What kinds of attacks become substantially more feasible as an adversary has access to OC5-level resources?
 
 <details>
-<summary><b>Answer Key (RAND Classifications)</b></summary>
+<summary><b>Answer Key (Operational Capability)</b></summary>
 
-- **Scenario A**: **OC2-OC3** - Requires moderate social engineering capability but limited technical resources
-- **Scenario B**: **OC5** - Supply chain hardware compromise requires nation-state level access and resources
-- **Scenario C**: **OC1-OC3** - Insider threats can be executed with minimal sophistication but require access
-- **Scenario D**: **OC4-OC5** - Zero-day development and sophisticated persistence requires significant resources
+**1. What is an Operational Capability level?**
 
-**Key RAND Insight**: The report emphasizes that software supply chain attacks are "among the cheapest and most scalable attacks" while hardware attacks are "feasible for well-resourced nation-state attackers at OC5."
+An OC level describes the **resources and capabilities available to a particular offensive operation**.
+
+The unit being classified is the operation rather than permanently the attacker. A highly capable intelligence service might devote relatively modest resources to one target and extraordinary resources to a small number of top-priority targets.
+
+---
+
+**2. What distinguishes OC4 from OC5?**
+
+**OC4** corresponds roughly to the standard operations of leading cyber-capable institutions.
+
+**OC5** corresponds to the relatively small number of **top-priority operations conducted by the world's most capable institutions**, where substantially more personnel, money, time, intelligence support, specialized expertise, and infrastructure may be available.
+
+A useful shorthand is:
+
+| | OC4 | OC5 |
+|---|---|---|
+| **Type of operation** | Standard high-end operation | Exceptional top-priority operation |
+| **Likely operator** | Leading cyber-capable institution | One of the world's most capable institutions |
+| **Resources** | Very substantial | Extreme |
+| **Planning horizon** | Major sustained operation | Potentially multi-year |
+| **Specialized capabilities** | Advanced | The most difficult capabilities may be brought to bear |
+
+The distinction is therefore closer to:
+
+> **normal high-end state operation vs. exceptional, heavily resourced top-priority state operation**
+
+---
+
+**3. Why classify the operation rather than the attacker?**
+
+Because the same institution does not spend the same resources on every target.
+
+An intelligence service might use:
+
+- commodity phishing for one operation
+- custom malware and zero-days for another
+- years of preparation, supply-chain access, recruited insiders, and specialized hardware for a particularly important target
+
+RAND's framework captures the resources available to the **specific operation**.
+
+---
+
+**4. What changes at the high end?**
+
+RAND treats attack feasibility as graded rather than assigning every attack exclusively to one OC level.
+
+At higher operational capability, attacks requiring combinations of the following become more realistic:
+
+- specialized zero-day development
+- long-term persistence
+- insider recruitment
+- hardware or software supply-chain compromise
+- attacks on highly isolated systems
+- specialized hardware capabilities
+- significant intelligence support
+- long preparation times
 
 </details>
 
-#### Exercise 1.2: Security Level Mapping
+---
+
+#### Exercise 1.2: Understanding SL4 and SL5
 
 > **Difficulty**: 🔴🔴🔴⚪⚪  
-> **Importance**: 🔵🔵🔵🔵⚪
+> **Importance**: 🔵🔵🔵🔵🔵
 
-**Task**: Find the Security Level (SL1-SL5) framework in the RAND report.
+**Task**: Locate RAND's Security Level framework. Focus on **SL4 and SL5**.
 
 **Analysis Questions:**
-1. What are the five "protected environments" that RAND identifies?
-2. At what model capability threshold does RAND suggest SL4 becomes necessary?
-3. Which security level requires "classified facility-level physical security"?
 
-**Mapping Exercise**: Based on the RAND framework, assign appropriate security levels:
-
-| Environment | Current Practice | RAND SL Recommendation | Justification |
-|-------------|-----------------|------------------------|---------------|
-| Research Lab (Pre-training) | Standard enterprise security | ? | ? |
-| Production Training (Frontier Model) | Enhanced cloud security | ? | ? |
-| Public API Deployment | SOC 2 compliance | ? | ? |
-| Internal Model Testing | Basic access controls | ? | ? |
-| On-Premises Inference | Hardware security modules | ? | ? |
+1. What adversary capability is **SL4** intended to withstand?
+2. What adversary capability is **SL5** intended to withstand?
+3. What is the relationship between OC4/OC5 and SL4/SL5?
+4. If a system is designed to SL4, what kind of attack is it explicitly *not* necessarily designed to withstand?
 
 <details>
 <summary><b>RAND Security Level Analysis</b></summary>
 
-| Environment | RAND SL Recommendation | Justification from Report |
-|-------------|------------------------|---------------------------|
-| Research Lab (Pre-training) | **SL2-SL3** | Pre-publication research requires enhanced protection but not maximum security |
-| Production Training (Frontier Model) | **SL4-SL5** | Highest value target requiring "classified facility-level physical security" |
-| Public API Deployment | **SL3** | Deployed models need high protection but operational considerations limit SL4+ |
-| Internal Model Testing | **SL3** | Internal deployment with controlled access to model capabilities |
-| On-Premises Inference | **SL2-SL3** | Depends on model capability and deployment context |
+| Security Level | Intended Adversary Capability |
+|---|---|
+| **SL4** | Standard operations by leading cyber-capable institutions — approximately **OC4** |
+| **SL5** | Top-priority operations by the world's most capable institutions — approximately **OC5** |
 
-**RAND Key Quote**: "SL4 can plausibly be reached incrementally, SL5 can likely only be reached by a radical reduction in the hardware and software stack that is trusted."
+The basic relationship is:
+
+**OC4 threat → design toward SL4**
+
+**OC5 threat → design toward SL5**
+
+The Security Level says what strength of offensive operation the defender is trying to withstand.
+
+---
+
+**What does SL4 not imply?**
+
+SL4 does not claim that the system will withstand every attack available to the world's most capable intelligence services when they devote extraordinary resources to the target.
+
+That is the threat model represented by **OC5 / SL5**.
 
 </details>
 
 ---
 
-### Part 2: IAPS Data Center Security - Critical Attack Vectors (35 minutes)
+#### Exercise 1.3: Highly Valuable Models Across Different Environments
 
-#### Exercise 2.1: Attack Vector Prioritization
-
-> **Difficulty**: 🔴🔴⚪⚪⚪  
+> **Difficulty**: 🔴🔴🔴⚪⚪  
 > **Importance**: 🔵🔵🔵🔵🔵
 
-**Task**: Locate the "Three Critical Threat Areas" section in the IAPS research document.
+Consider a newly trained frontier model whose weights would provide a substantial strategic advantage if stolen.
 
-**Reading Assignment**: Each group takes one threat area and presents to others:
-- **Group A**: Side-Channel Attacks
-- **Group B**: Hardware Supply Chain Vulnerabilities  
-- **Group C**: Model Weight Exfiltration
+Copies of the same weights are needed in several environments:
 
-**Questions for Each Group:**
-1. What specific technical mechanism does IAPS describe for this attack?
-2. Why are AI workloads particularly vulnerable compared to traditional systems?
-3. What defensive measures does IAPS recommend?
+- model training
+- research
+- internal deployment
+- public API deployment
 
-**Cross-Group Analysis**: After presentations, discuss:
-- Which attack vector is most cost-effective for adversaries?
-- Which is hardest to detect once deployed?
-- Which requires the most sophisticated adversary capabilities?
+**Questions for Group Discussion:**
+
+1. Should each environment necessarily receive a different target Security Level?
+2. If the model is sufficiently valuable that **OC4 operations are worth defending against wherever the weights are accessible**, what target Security Level should those environments have?
+3. What if the organization believes the model is important enough to attract an **OC5 top-priority operation**?
+4. If several environments have the same target Security Level, what still differs between them?
+
+<details>
+<summary><b>Answer Key</b></summary>
+
+**1. Does each environment necessarily receive a different SL?**
+
+No.
+
+RAND discusses different environments because the **security problem and available controls differ between them**. The environment does not by itself determine how capable an adversary the organization wants to withstand.
+
+For sufficiently valuable frontier-model weights, the desired level of protection may flatten across several environments.
+
+---
+
+**2. If OC4 is the threat**
+
+If the weights are sufficiently desirable that the organization wants to withstand OC4 operations wherever they are accessible, then the targets might look like:
+
+| Environment | Target Security Level |
+|---|---|
+| Training | **SL4** |
+| Research | **SL4** |
+| Internal deployment | **SL4** |
+| Public API deployment | **SL4** |
+
+---
+
+**3. If OC5 is the threat**
+
+If the organization intends to withstand a top-priority operation by one of the world's most capable institutions:
+
+| Environment | Target Security Level |
+|---|---|
+| Training | **SL5** |
+| Research | **SL5** |
+| Internal deployment | **SL5** |
+| Public API deployment | **SL5** |
+
+The same reasoning can produce a mixture of SL4 and SL5 if the organization believes some copies or uses of the asset justify a different threat model.
+
+---
+
+**4. What still differs between environments?**
+
+The controls needed to achieve the target.
+
+For example:
+
+- **Training** requires protecting distributed compute systems, storage, checkpoints, and accelerator interconnects.
+- **Research** requires giving researchers useful ways to interact with models without unnecessarily exposing raw weights.
+- **Internal deployment** introduces inference services, internal applications, and additional users.
+- **Public API deployment** deliberately exposes an interface to untrusted external users.
+
+So:
+
+> **The value of the asset and the adversary determine the desired Security Level.**
+
+> **The environment strongly affects how that Security Level can be implemented.**
+
+</details>
+
+---
+
+### Part 2: IAPS Data Center Security - Major Threats (40 minutes)
+
+#### Exercise 2.1: Attack Vector Analysis
+
+> **Difficulty**: 🔴🔴🔴⚪⚪  
+> **Importance**: 🔵🔵🔵🔵🔵
+
+**Task**: Read the IAPS discussion of the following three AI data-center attack areas.
+
+Every group should complete the table for **all three attacks**.
+
+| Attack Area | How does it work? | What does the attacker need? | Why does IAPS think it matters? | What defensive direction does IAPS suggest? |
+|---|---|---|---|---|
+| **Side-channel attacks** | ? | ? | ? | ? |
+| **Hardware supply-chain attacks** | ? | ? | ? | ? |
+| **Model-weight exfiltration** | ? | ? | ? | ? |
+
+Groups may divide the initial reading between members, but should complete and discuss the full table together.
 
 <details>
 <summary><b>IAPS Attack Vector Analysis</b></summary>
 
-**Side-Channel Attacks:**
-- **Mechanism**: Measure electromagnetic/power emissions to extract secrets
-- **AI Vulnerability**: Predictable computation patterns leak encryption keys/model parameters
-- **Defense**: Shielded enclosures, power filtering, algorithmic countermeasures
+### Side-Channel Attacks
 
-**Supply Chain Vulnerabilities:**
-- **Mechanism**: Hardware tampering during manufacturing creates persistent backdoors
-- **AI Vulnerability**: Geographic concentration of manufacturing in potentially adversarial nations
-- **Defense**: Trusted supplier diversification, component verification, secure sourcing
+**How does it work?**
 
-**Weight Exfiltration:**
-- **Mechanism**: High-value terabyte-scale assets transferred through various channels
-- **AI Vulnerability**: Model weights are immediately executable unlike traditional IP
-- **Defense**: Network monitoring, data loss prevention, air-gapped environments
+An attacker observes unintended physical effects of computation, such as:
 
-**IAPS Priority**: The research emphasizes supply chain risks due to "components manufactured in China present particular risks" while acknowledging other origins may also be vulnerable.
+- electromagnetic emissions
+- power consumption
+- acoustic signals
+- other physical signals correlated with computation
+
+Those measurements may reveal sensitive information, including cryptographic secrets.
+
+**What does the attacker need?**
+
+Depending on the attack:
+
+- specialized technical expertise
+- specialized measurement equipment
+- physical proximity or another way to observe the relevant signal
+- substantial knowledge of the hardware being attacked
+
+**Why does IAPS think it matters?**
+
+- AI accelerators have received less public side-channel-security scrutiny than mature general-purpose processors.
+- Proprietary accelerator designs can make independent security research difficult.
+- Sophisticated state adversaries may consider physical attacks that normal enterprise-security programs rarely prioritize.
+
+**Defensive direction:**
+
+- accelerator-specific side-channel defenses
+- emissions blocking
+- noise injection
+- improved confidential-computing support
+- dedicated hardware-security research and testbeds
+
+---
+
+### Hardware Supply-Chain Attacks
+
+**How does it work?**
+
+An attacker compromises a component before or during its delivery and installation.
+
+The compromise may involve:
+
+- malicious hardware
+- firmware
+- programmable components
+- networking equipment
+- supporting data-center infrastructure
+
+The system can therefore arrive at the data center already compromised.
+
+**What does the attacker need?**
+
+Potential requirements include:
+
+- access to manufacturing
+- access to a supplier or integrator
+- access during shipping or installation
+- hardware and firmware expertise
+- significant intelligence or organizational capabilities
+
+**Why does IAPS think it matters?**
+
+- AI data centers rely on complex global supply chains.
+- Compromised hardware may operate below the visibility of normal host security controls.
+- Responsibility is distributed across chip designers, manufacturers, equipment vendors, integrators, and operators.
+- A sufficiently capable adversary may be able to exploit stages of the supply chain that the final data-center operator cannot directly observe.
+
+**Defensive direction:**
+
+- improve supply-chain visibility
+- audit security-critical hardware
+- improve component verification
+- improve supplier assurance
+- reduce critical dependencies on high-risk supply chains
+- fund additional hardware and supply-chain security research
+
+---
+
+### Model-Weight Exfiltration
+
+**How does it work?**
+
+Once an attacker obtains useful access to model weights, they must transfer the weights out of the protected environment.
+
+IAPS discusses several possible egress paths:
+
+- **In-band** — normal production networking
+- **Out-of-band** — management networks and related infrastructure
+- **Covert channels** — alternative paths designed to bypass normal egress controls
+
+**What does the attacker need?**
+
+- useful access to the weights or systems processing them
+- an egress mechanism
+- sufficient channel capacity to transfer a very large amount of information
+
+**Why does IAPS think it matters?**
+
+Frontier-model weights are extremely valuable once stolen.
+
+However, their very large size also gives defenders an unusual advantage. Unlike a password, algorithm, or short research document, a frontier model may require transferring **terabytes** of data.
+
+**Defensive direction:**
+
+- stronger controls on normal production egress
+- stronger security for management and out-of-band networks
+- reduced covert-channel capacity
+- defenses specifically designed around large-volume model-weight exfiltration
 
 </details>
 
-#### Exercise 2.2: IAPS Policy Framework Implementation
+---
+
+#### Exercise 2.2: Comparing the Threats
 
 > **Difficulty**: 🔴🔴🔴⚪⚪  
-> **Importance**: 🔵🔵🔵⚪⚪
-
-**Task**: Find the "Four Core Policy Recommendations" in the IAPS document.
-
-**Implementation Scenario**: Your organization operates three data centers with 15,000 GPUs total. Using the IAPS recommendations, design an implementation plan:
-
-1. **Security Standards**: How would you implement "AI data center-specific security framework with progressive maturity levels"?
-2. **R&D Investment**: What specific defensive technologies would you prioritize for DARPA-style funding?
-3. **Intelligence Sharing**: What incident reporting requirements would you establish?
-4. **Supply Chain Decoupling**: How quickly could you shift away from potentially compromised suppliers?
-
-**Discussion Questions:**
-- Which IAPS recommendation would have the highest immediate impact?
-- Which faces the greatest implementation challenges?
-- How do the IAPS recommendations align with or differ from RAND's SL framework?
-
-<details>
-<summary><b>IAPS Implementation Strategy</b></summary>
-
-**1. Security Standards (6-12 months):**
-- Map current practices to maturity model (similar to RAND SL1-SL5)
-- Establish certification requirements for government procurement
-- Create vendor security credential demonstration programs
-
-**2. R&D Investment (Ongoing):**
-- **Side-channel hardening**: Hardware-level countermeasures for AI accelerators
-- **Supply chain security**: Component verification and trusted manufacturing
-- **Exfiltration prevention**: AI-enhanced monitoring and data loss prevention
-
-**3. Intelligence Sharing (3-6 months):**
-- Mandatory incident reporting for model weight compromise
-- Declassified threat intelligence sharing with private sector
-- Industry threat sharing communities (currently "most breaches go unreported")
-
-**4. Supply Chain Decoupling (2-5 years):**
-- Map critical component dependencies by country of origin
-- Establish trusted supplier networks in allied nations
-- Create redundant sourcing for security-critical components
-
-</details>
-
----
-
-### Part 3: SL5 Novel Recommendations - Next-Generation Controls (35 minutes)
-
-#### Exercise 3.1: Five-Domain Architecture Analysis
-
-> **Difficulty**: 🔴🔴🔴🔴⚪  
 > **Importance**: 🔵🔵🔵🔵🔵
 
-**Task**: Open the SL5 document and locate the "Top 5 Recommendations" for each security domain.
+**Threat Comparison**: Using your completed table, discuss:
 
-**Group Assignment**: Each group analyzes one SL5 domain and identifies the most novel recommendation:
-
-- **Group A**: Supply Chain Security - Focus on "architectural isolation and progressive access restriction"
-- **Group B**: Network Security - Focus on "AI-enhanced cross-domain solutions"
-- **Group C**: Machine Security - Focus on "tamper-proof enclosures that envelop entire sensitive scopes"
-- **Group D**: Physical Security - Focus on "two-person integrity for all maintenance"
-- **Group E**: Personnel Security - Focus on "industry-optimized sensitivity levels"
-
-**Questions for Each Group:**
-1. How does this SL5 recommendation go beyond traditional security approaches?
-2. What specific technical implementation does the document suggest?
-3. What are the main cost-benefit trade-offs identified?
+1. Which attack is likely to be cheapest for an adversary under favorable circumstances?
+2. Which could be hardest for a data-center operator to detect?
+3. Which is most likely to require OC4 or OC5-level resources?
+4. Which attacks can themselves provide the attacker with access, and which generally assume that some useful access has already been obtained?
+5. Why can the enormous size of model weights be considered a defensive advantage?
 
 <details>
-<summary><b>SL5 Novel Recommendations Summary</b></summary>
+<summary><b>Discussion Guide</b></summary>
 
-**Supply Chain - Architectural Isolation:**
-- **Innovation**: "Progressive access restriction" with systematic reduction of privileged access ("seat management")
-- **Implementation**: Weight-accessing systems run minimal, formally verified components only
-- **Trade-off**: Reduced functionality vs. dramatically smaller attack surface
+**1. Cheapest**
 
-**Network - AI-Enhanced Cross-Domain:**
-- **Innovation**: AI monitors analyze code/commands crossing security boundaries
-- **Implementation**: Weaker AI models monitor stronger AI outputs for suspicious patterns
-- **Trade-off**: Compute overhead vs. enabling AI research workflows securely
+Model-weight exfiltration may be comparatively inexpensive **if the attacker already has sufficient access and a usable egress path**.
 
-**Machine - Tamper-Evident Enclosures:**
-- **Innovation**: Physical security extended to "entire sensitive scopes" (whole racks/rooms)
-- **Implementation**: Hardware detection covering complete compute environments
-- **Trade-off**: Installation complexity vs. comprehensive physical protection
+This caveat matters:
 
-**Physical - Two-Person Integrity:**
-- **Innovation**: All maintenance requires two authorized individuals with body-worn cameras
-- **Implementation**: Continuous recording with obstruction alarms during facility access
-- **Trade-off**: Operational overhead vs. insider threat elimination
+- a supply-chain compromise can be a way of **obtaining** access
+- weight exfiltration generally describes what happens **after** gaining access to the weights
 
-**Personnel - Industry Clearances:**
-- **Innovation**: Private sector adaptation of government clearance systems
-- **Implementation**: "Industry-optimized sensitivity levels" with continuous behavioral monitoring
-- **Trade-off**: Talent pipeline constraints vs. insider threat mitigation
+---
 
-</details>
+**2. Hardest to detect**
 
-#### Exercise 3.2: SL5 Implementation Feasibility Assessment
+A sophisticated **hardware supply-chain compromise** is a strong candidate.
 
-> **Difficulty**: 🔴🔴🔴🔴🔵  
-> **Importance**: 🔵🔵🔵🔵⚪
+Malicious functionality may:
 
-**Task**: Find the SL5 document's discussion of "3-6 month feasibility assessment" timeline.
+- arrive before deployment
+- reside below normal operating-system monitoring
+- survive ordinary software reinstalls
+- operate in hardware or firmware that the operator has limited ability to inspect
 
-**Real-World Scenario**: A major AI lab with the following characteristics wants to pursue SL5:
-- 50,000+ GPUs across 5 geographic locations
-- 1,000+ employee research organization
-- Active training of 5+ frontier models simultaneously
-- Commercial API serving 100M+ requests daily
-- University research partnerships in 15+ countries
+Other answers are reasonable if the group identifies a specific mechanism and explains why detection would be difficult.
 
-**Feasibility Questions** (refer to specific SL5 document sections):
-1. **Supply Chain**: How many software dependencies would need to be eliminated based on SL5 "minimal trusted software stack" requirements?
-2. **Network**: Is 100+ Tbps distributed training compatible with SL5 "network encryptor" bandwidth limitations?
-3. **Personnel**: How many employees would require "industry-optimized clearances" and what's the talent pipeline impact?
-4. **Physical**: What percentage of existing facilities could support "tamper-evident enclosures" without major reconstruction?
-5. **Machine**: When will "hardware root of trust" be available in commercial AI accelerators?
+---
 
-**Group Decision**: Based on your analysis, vote on implementation timeline:
-- **18 months**: Aggressive implementation with significant operational disruption
-- **3-5 years**: Phased implementation aligned with hardware refresh cycles  
-- **5+ years**: Full implementation only with next-generation purpose-built facilities
-- **Not feasible**: SL5 requirements incompatible with current AI development needs
+**3. Most demanding**
 
-<details>
-<summary><b>SL5 Feasibility Reality Check</b></summary>
+Sophisticated **hardware supply-chain attacks** and advanced **side-channel attacks** are strong candidates for requiring very high-end capabilities.
 
-**Critical Implementation Challenges:**
+The exact answer depends on the particular attack. IAPS does not provide a universal ranking.
 
-**Supply Chain Reality:**
-- Current ML stacks have 200+ dependencies per SL5 analysis
-- "Radical reduction" requires rewriting most AI development tools
-- Timeline depends on availability of formally verified alternatives
+---
 
-**Network Bandwidth Gap:**
-- Current encryptors: 100-400 Gbps maximum throughput
-- Future distributed training: 100+ Tbps requirement  
-- Solution requires "multiplexing currently available encryptors" with unproven scalability
+**4. Initial access vs. post-compromise**
 
-**Personnel Clearance Bottleneck:**
-- AI talent market extremely competitive globally
-- Clearance requirements could reduce available talent pool by 70-90%
-- "Industry-optimized" clearances don't yet exist
+**Hardware supply-chain compromise** can itself establish attacker access or undermine system integrity.
 
-**Physical Infrastructure:**
-- Most existing data centers not designed for "tamper-evident enclosures"
-- Retrofit costs potentially exceed new construction
-- Geographic distribution conflicts with physical security requirements
+**Side-channel attacks** may reveal secrets without conventional software compromise.
 
-**Hardware Readiness:**
-- "Hardware root of trust" in AI accelerators still developmental
-- Current GPU/TPU architectures lack security-first design
-- 3-5 year timeline for security-enhanced AI chips
+**Model-weight exfiltration** generally assumes that the attacker has already obtained some ability to access or influence systems containing the weights.
 
-**SL5 Assessment**: Most organizations would realistically require 5+ years for full implementation, with immediate focus on highest-impact, lowest-cost controls.
+---
+
+**5. Weight size as a defensive advantage**
+
+Stealing a password or algorithm may require transmitting only bytes or kilobytes.
+
+Stealing a frontier model may require transmitting **terabytes**.
+
+That creates opportunities to:
+
+- restrict available bandwidth
+- tightly limit egress paths
+- detect large transfers
+- make low-bandwidth covert channels impractical
 
 </details>
 
 ---
 
-## Synthesis Exercise: Cross-Report Integration (10 minutes)
+### Part 3: IAPS - Main Solution Directions (20 minutes)
 
-### Final Group Discussion
+#### Exercise 3.1: From Threats to Defensive Priorities
 
-**Integration Questions:**
-1. How do the RAND Security Levels (SL1-SL5) map to the IAPS policy recommendations?
-2. Which SL5 novel recommendations directly address the IAPS "three critical threat areas"?
-3. Where do the three frameworks contradict or provide conflicting guidance?
-4. What's missing from all three reports that your organization would need to know?
+> **Difficulty**: 🔴🔴🔴⚪⚪  
+> **Importance**: 🔵🔵🔵🔵🔵
 
-**Priority Ranking Exercise**: Based on your analysis of all three documents, rank these implementation priorities:
+**Task**: Read the IAPS recommendations and complete the following table.
 
-| Priority | Recommendation | Source | Timeline | Rationale |
-|----------|---------------|--------|----------|-----------|
-| 1 | ? | ? | ? | ? |
-| 2 | ? | ? | ? | ? |
-| 3 | ? | ? | ? | ? |
-| 4 | ? | ? | ? | ? |
-| 5 | ? | ? | ? | ? |
+Every group should examine **all four solution directions**.
+
+| IAPS Solution Direction | What problem is it addressing? | Which threat(s) from Part 2 does it help with? | What does IAPS propose? | Who needs to act? |
+|---|---|---|---|---|
+| **AI data-center security standards** | ? | ? | ? | ? |
+| **Security R&D** | ? | ? | ? | ? |
+| **Threat and incident information sharing** | ? | ? | ? | ? |
+| **Hardware supply-chain security** | ? | ? | ? | ? |
+
+<details>
+<summary><b>IAPS Solution Directions</b></summary>
+
+### 1. AI Data-Center Security Standards
+
+**Problem:**
+
+Existing security standards do not fully address the distinctive risks of frontier AI data centers or the requirements imposed by very capable adversaries.
+
+**Threats addressed:**
+
+Potentially all three attack areas, by establishing stronger baseline expectations across the data-center security program.
+
+**Proposed direction:**
+
+Develop AI data-center-specific security standards or frameworks with progressively stronger security practices.
+
+**Who needs to act?**
+
+- data-center operators
+- AI labs
+- government
+- standards organizations
+- relevant technology vendors
+
+---
+
+### 2. Security R&D
+
+**Problem:**
+
+Important defenses are immature, unavailable, or insufficiently studied.
+
+**Threats addressed:**
+
+Especially:
+
+- side-channel attacks
+- hardware attacks
+- model-weight exfiltration
+
+**Proposed direction:**
+
+Fund and incentivize focused security R&D, including areas such as:
+
+- accelerator side-channel defenses
+- hardware security
+- supply-chain security
+- defenses against model-weight exfiltration
+- other AI data-center-specific security technologies
+
+IAPS discusses mechanisms including **DARPA-style programs** for targeted research.
+
+**Who needs to act?**
+
+- government research funders
+- hardware vendors
+- academic and independent researchers
+- AI labs
+
+---
+
+### 3. Threat and Incident Information Sharing
+
+**Problem:**
+
+Individual organizations have incomplete information about attacks against AI infrastructure, while useful threat intelligence and incident lessons may remain siloed.
+
+**Threats addressed:**
+
+Potentially all three attack areas.
+
+Information about:
+
+- observed side-channel attacks
+- compromised components or suppliers
+- exfiltration attempts
+- attacker infrastructure
+- indicators of compromise
+
+can improve defenses across multiple organizations.
+
+**Proposed direction:**
+
+Improve information sharing between government and industry and among affected organizations.
+
+Possible mechanisms include:
+
+- sharing threat intelligence
+- reporting serious incidents
+- distributing indicators and lessons learned
+- industry coordination mechanisms
+
+**Who needs to act?**
+
+- AI labs
+- data-center operators
+- hardware vendors
+- government agencies
+
+---
+
+### 4. Hardware Supply-Chain Security
+
+**Problem:**
+
+Critical AI data-center components may be produced through long, opaque, and geographically distributed supply chains that sophisticated adversaries can target.
+
+**Threats addressed:**
+
+Most directly:
+
+- hardware supply-chain compromise
+
+It may also reduce opportunities for hardware-assisted side channels or persistent exfiltration mechanisms.
+
+**Proposed direction:**
+
+- identify critical dependencies
+- improve supplier assurance
+- improve component verification
+- develop more trusted supply options
+- reduce dependence on especially high-risk sources where appropriate
+
+**Who needs to act?**
+
+- hardware manufacturers
+- equipment vendors
+- AI labs
+- data-center operators
+- governments
+
+</details>
+
+---
+
+#### Exercise 3.2: Prioritizing IAPS Recommendations
+
+> **Difficulty**: 🔴🔴🔴⚪⚪  
+> **Importance**: 🔵🔵🔵🔵⚪
+
+Your organization is building a data center that will store and serve the weights of a strategically important frontier model.
+
+Assume the organization believes:
+
+- **OC4 operations are definitely in scope**
+- **OC5 operations may be in scope**
+
+**Discussion Questions:**
+
+1. Which IAPS solution direction could improve security fastest using currently available technology?
+2. Which depends most heavily on new research or new hardware?
+3. Which requires coordination beyond the individual AI lab?
+4. Which of the three attack areas from Exercise 2.1 seems hardest to address using today's technology?
+5. For each answer, identify which attacker capability or attack path the proposed improvement is intended to address.
+
+<details>
+<summary><b>Discussion Guide</b></summary>
+
+There is no single required ranking.
+
+Reasonable observations include:
+
+**Security standards**
+- Can begin using existing technologies and practices
+- Require agreement about what controls are appropriate for high-assurance AI data centers
+- Can improve consistency across many areas of security
+
+**Security R&D**
+- Is essential where effective defenses do not yet exist
+- Side-channel hardening and some hardware-security improvements may require changes by accelerator vendors
+- Some defenses cannot be deployed independently by an AI lab today
+
+**Threat and incident information sharing**
+- Can improve detection and response using existing organizational mechanisms
+- Depends on cooperation between organizations
+- Some useful intelligence may require government participation
+
+**Hardware supply-chain security**
+- Necessarily involves vendors, manufacturers, integrators, governments, and operators
+- Cannot be solved by the final data-center operator alone
+- May require long-term changes to sourcing and verification
+
+**Weight-exfiltration defenses**
+- Benefit from the unusually large size of weights
+- Still require defending normal networking, management infrastructure, and possible covert channels
+
+Answers should connect the proposed solution to the actual attacker technique rather than ranking recommendations only in the abstract.
+
+</details>
+
+---
+
+## Synthesis Exercise (10 minutes)
+
+### Final Group Review
+
+Without referring back to the report, complete the following table.
+
+When the group is finished, open the answer key and correct anything that was missing or substantially different.
+
+| Concept | Explain It in One or Two Sentences |
+|---|---|
+| **OC4** | ? |
+| **OC5** | ? |
+| **SL4** | ? |
+| **SL5** | ? |
+| **Side-channel attacks** | ? |
+| **Hardware supply-chain attacks** | ? |
+| **Model-weight exfiltration** | ? |
+| **IAPS solution directions** | ? |
+
+<details>
+<summary><b>Answer Key</b></summary>
+
+**OC4**
+
+Standard high-end operations by leading cyber-capable institutions.
+
+**OC5**
+
+Exceptional top-priority operations by the world's most capable institutions, with much greater resources and specialized capabilities available.
+
+**SL4**
+
+A security posture intended to withstand approximately OC4 operations.
+
+**SL5**
+
+A security posture intended to withstand approximately OC5 top-priority operations.
+
+**Side-channel attacks**
+
+Recover sensitive information from unintended physical effects or signals produced by computation. IAPS calls for more accelerator-specific research and defensive techniques.
+
+**Hardware supply-chain attacks**
+
+Compromise components before they reach or are installed by the data-center operator. IAPS calls for better visibility, verification, supplier assurance, trusted sourcing, and hardware-security R&D.
+
+**Model-weight exfiltration**
+
+Transfer stolen weights through production, management, or covert egress paths. IAPS emphasizes stronger egress defenses and notes that the enormous size of frontier-model weights gives defenders an unusual advantage.
+
+**IAPS solution directions**
+
+Develop stronger AI data-center security standards, fund targeted security R&D, improve threat and incident information sharing, and strengthen critical hardware supply chains.
+
+</details>
 
 ---
 
 ## Key Takeaways from Document Analysis
 
 ### What We Learned from RAND:
-- [ ] Threat actor classification (OC1-OC5) provides structured approach to defensive planning
-- [ ] Security levels (SL1-SL5) offer progressive protection matching threat environment
-- [ ] Model weight value proposition creates unique security requirements vs. traditional IP
+- [ ] **OC4** describes standard operations by leading cyber-capable institutions
+- [ ] **OC5** describes exceptional top-priority operations by the world's most capable institutions
+- [ ] **SL4** is intended to withstand approximately OC4 operations
+- [ ] **SL5** is intended to withstand approximately OC5 operations
+- [ ] For sufficiently valuable frontier-model weights, several environments may all warrant SL4 or SL5 even though the controls needed in those environments differ
 
 ### What We Learned from IAPS:
-- [ ] Three critical attack vectors require immediate policy attention
-- [ ] Four-point policy framework provides government-industry coordination structure  
-- [ ] Current data center security practices insufficient for AI-specific threats
-
-### What We Learned from SL5:
-- [ ] Five security domains require coordinated novel approaches
-- [ ] "Radical reduction" in trusted components necessary for highest security levels
-- [ ] 3-6 month feasibility assessment timeline enables practical implementation planning
-
-### Implementation Priorities for Your Organization:
-- [ ] **Immediate (0-6 months)**: _[Fill based on discussion]_
-- [ ] **Short-term (6-18 months)**: _[Fill based on discussion]_
-- [ ] **Medium-term (1-3 years)**: _[Fill based on discussion]_
-- [ ] **Long-term (3-5 years)**: _[Fill based on discussion]_
+- [ ] Side-channel attacks are an important and under-researched risk for AI accelerators
+- [ ] Hardware supply-chain compromise can undermine assumptions made by conventional software security
+- [ ] Model-weight exfiltration must account for production, management, and covert egress paths
+- [ ] The enormous size of frontier-model weights gives defenders useful opportunities to constrain exfiltration
+- [ ] IAPS emphasizes AI-specific security standards, targeted security R&D, threat and incident information sharing, and stronger hardware supply-chain security as major solution directions
 
 ---
 
 ## Further Exploration
 
 ### For Deeper Technical Understanding:
-- **RAND Report Appendices**: Detailed attack vector analysis and cost-benefit calculations
-  - Full report: https://www.rand.org/content/dam/rand/pubs/research_reports/RRA2800/RRA2849-1/RAND_RRA2849-1.pdf
-- **IAPS Technical Sections**: Specific countermeasures for each attack vector
-  - Research page: https://www.iaps.ai/research/accelerating-ai-data-center-security
-- **SL5 Domain Memos**: Full technical specifications for each security domain
-  - Local file: `./SL5_NOVEL-RECOMMENDATIONS.pdf`
-
-### For Policy Implementation:
-- **NIST AI Risk Management Framework**: https://www.nist.gov/itl/ai-risk-management-framework
-- **NSA Commercial Solutions for Classified**: https://www.nsa.gov/resources/everyone/csfc/
-- **Industry Working Groups**: 
-  - MLSecOps: https://mlsecops.com/
-  - AI Village: https://aivillage.org/
-  - OWASP ML Security: https://owasp.org/www-project-machine-learning-security-top-10/
-
-### Additional Context Documents:
-- **IAPS Organization**: https://www.iaps.ai/
-- **SL5 Task Force Information**: https://sl5.org/
-- **OpenTitan Hardware Root of Trust**: https://opentitan.org/
-
----
-
-*This discussion format ensures direct engagement with the source documents while building practical understanding through guided analysis and group interaction.*
+- **RAND Report Appendices**: Detailed attack-vector analysis and security-level reasoning
+- **IAPS Technical Sections**: Additional discussion of AI data-center attack surfaces and proposed research directions
